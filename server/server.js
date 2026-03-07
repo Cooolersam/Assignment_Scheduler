@@ -14,14 +14,17 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+// Render sets RENDER=true automatically; use it to detect production
+const IS_PRODUCTION = !!process.env.RENDER;
 
-app.set('trust proxy', 1);
+const app = express();
+const PORT = process.env.PORT || 5001;
+
+if (IS_PRODUCTION) app.set('trust proxy', 1);
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: IS_PRODUCTION ? process.env.FRONTEND_URL : 'http://localhost:3000',
   credentials: true
 }));
 app.use(express.json());
@@ -29,8 +32,8 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
-  cookie: { 
-    secure: process.env.NODE_ENV === 'production',
+  cookie: {
+    secure: IS_PRODUCTION,
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
@@ -43,7 +46,8 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.GOOGLE_CALLBACK_URL
+  callbackURL: '/auth/google/callback',
+  proxy: IS_PRODUCTION
 }, (accessToken, refreshToken, profile, done) => {
   const user = {
     id: profile.id,
@@ -87,7 +91,9 @@ app.get('/health', (_req, res) => {
 const clientDist = path.join(__dirname, '../client/dist');
 app.use(express.static(clientDist));
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(clientDist, 'index.html'));
+  res.sendFile(path.join(clientDist, 'index.html'), err => {
+    if (err) res.status(404).send('Run npm run build in /client first');
+  });
 });
 
 app.listen(PORT, () => {

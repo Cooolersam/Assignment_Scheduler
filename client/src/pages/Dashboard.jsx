@@ -43,21 +43,43 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
     }
   }
 
+  // Ported from Pair.java — priority determines sort order (higher = more urgent)
+  // Formula: (100 - classGrade) * 10000 + (-daysUntilDue) * 100 + pointValue
+  const calculatePriority = (assignment) => {
+    const today = new Date()
+
+    // Days until due — negative means overdue (higher urgency)
+    const daysUntilDue = assignment.dueDate
+      ? Math.floor((new Date(assignment.dueDate) - today) / (1000 * 60 * 60 * 24))
+      : 999
+
+    // Class grade as percentage — lower grade = higher priority
+    const classGrade = assignment.assignedGrade && assignment.points
+      ? (assignment.assignedGrade / assignment.points) * 100
+      : 100
+
+    const pointValue = assignment.points || 0
+
+    return (100 - classGrade) * 10000 + (-daysUntilDue) * 100 + pointValue
+  }
+
   const getFilteredAssignments = () => {
     const now = new Date()
-    
-    return assignments.filter(assignment => {
-      switch (filter) {
-        case 'pending':
-          return assignment.submissionStatus !== 'TURNED_IN'
-        case 'submitted':
-          return assignment.submissionStatus === 'TURNED_IN'
-        case 'upcoming':
-          return assignment.submissionStatus !== 'TURNED_IN' && assignment.dueDate && new Date(assignment.dueDate) > now
-        default:
-          return true
-      }
-    })
+
+    return assignments
+      .filter(assignment => {
+        switch (filter) {
+          case 'pending':
+            return assignment.submissionStatus !== 'TURNED_IN'
+          case 'submitted':
+            return assignment.submissionStatus === 'TURNED_IN'
+          case 'upcoming':
+            return assignment.submissionStatus !== 'TURNED_IN' && assignment.dueDate && new Date(assignment.dueDate) > now
+          default:
+            return true
+        }
+      })
+      .sort((a, b) => calculatePriority(b) - calculatePriority(a))
   }
 
   const filteredAssignments = getFilteredAssignments()
