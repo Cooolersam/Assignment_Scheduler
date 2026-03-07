@@ -7,7 +7,6 @@ A modern, dark-themed web application that integrates with Google Classroom to d
 - 🔐 **Google OAuth Login** - Secure authentication with your school Google account
 - 📚 **Real-time Sync** - Automatically fetches assignments and grades from Google Classroom
 - 🎯 **Smart Filtering** - Filter by all, upcoming, pending, or submitted assignments
-- 🎨 **Dark Theme** - Beautiful dark blue and silver interface
 - ⚡ **Fast & Responsive** - Smooth UI with no extra clicks needed
 - 📱 **Mobile Friendly** - Works great on phones and tablets
 
@@ -130,6 +129,7 @@ SESSION_SECRET=xxx
 - [ ] Multiple account support
 - [ ] Docker containerization
 - [ ] Database integration for caching
+- [ ] Rebuild with Java backend
 
 ## Deployment
 
