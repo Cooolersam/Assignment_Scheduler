@@ -87,7 +87,9 @@ app.get('/health', (_req, res) => {
 const clientDist = path.join(__dirname, '../client/dist');
 app.use(express.static(clientDist));
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(clientDist, 'index.html'));
+  res.sendFile(path.join(clientDist, 'index.html'), err => {
+    if (err) res.status(404).send('Run npm run build in /client first');
+  });
 });
 
 app.listen(PORT, () => {
