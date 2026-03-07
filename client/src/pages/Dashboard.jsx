@@ -53,7 +53,7 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
         case 'submitted':
           return assignment.submissionStatus === 'TURNED_IN'
         case 'upcoming':
-          return assignment.dueDate && new Date(assignment.dueDate) > now
+          return assignment.submissionStatus !== 'TURNED_IN' && assignment.dueDate && new Date(assignment.dueDate) > now
         default:
           return true
       }

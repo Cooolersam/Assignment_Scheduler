@@ -27,8 +27,8 @@
 }
 
 .logo-img {
-  /* Full image at this width = 83px wide, 160px tall. Container shows top 32px = top 20% */
-  width: 83px;
+  /* Square crop from top: image fills container width, overflow clips height */
+  width: 32px;
   height: auto;
   display: block;
 }

@@ -52,7 +52,7 @@ export async function getClassroomData(accessToken) {
         for (const assignment of processedAssignments) {
           try {
             const submissionsResponse = await axios.get(
-              `${CLASSROOM_API_BASE}/courses/${course.id}/courseWork/${assignment.id}/studentSubmissions`,
+              `${CLASSROOM_API_BASE}/courses/${course.id}/courseWork/${assignment.id}/studentSubmissions?userId=me`,
               { headers }
             );
 
