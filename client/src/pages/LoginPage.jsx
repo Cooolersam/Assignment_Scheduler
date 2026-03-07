@@ -12,7 +12,7 @@ export default function LoginPage() {
           <div className="login-logo-wrap">
             <img src="/Thoth.png" alt="Thoth" className="login-logo-img" />
           </div>
-          <h1>Thoth</h1>
+          <h1>Thoth Assignment Scheduler</h1>
           <p>Sync your Google Classroom assignments</p>
         </div>
 

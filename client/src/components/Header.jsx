@@ -102,7 +102,7 @@ export default function Header({ user, onLogout, lastUpdate, onUpdateProfile }) 
           <div className="logo-wrap">
             <img src="/Thoth.png" alt="Thoth" className="logo-img" />
           </div>
-          <h1>Thoth</h1>
+          <h1>Thoth Assignment Scheduler</h1>
         </div>
 
         <div className="header-center">
