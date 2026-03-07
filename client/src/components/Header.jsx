@@ -100,7 +100,7 @@ export default function Header({ user, onLogout, lastUpdate, onUpdateProfile }) 
       <header className="header">
         <div className="header-left">
           <div className="logo-wrap">
-            <img src="/Thoth.svg" alt="Thoth" className="logo-img" />
+            <img src="/Thoth.png" alt="Thoth" className="logo-img" />
           </div>
           <h1>Thoth</h1>
         </div>
