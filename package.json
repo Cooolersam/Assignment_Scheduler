@@ -1,7 +1,7 @@
 {
-  "name": "assignment-scheduler",
+  "name": "thoth",
   "version": "1.0.0",
-  "description": "Assignment Scheduler - Google Classroom Dashboard",
+  "description": "Thoth - Google Classroom Dashboard",
   "private": true,
   "scripts": {
     "install-all": "npm install && cd client && npm install && cd ../server && npm install",

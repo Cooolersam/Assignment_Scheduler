@@ -1,7 +1,7 @@
 {
-  "name": "assignment-scheduler-server",
+  "name": "thoth-server",
   "version": "1.0.0",
-  "description": "Backend for Assignment Scheduler with Google Classroom API",
+  "description": "Backend for Thoth with Google Classroom API",
   "main": "server.js",
   "type": "module",
   "scripts": {

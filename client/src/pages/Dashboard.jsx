@@ -5,7 +5,7 @@ import Header from '../components/Header'
 import AssignmentCard from '../components/AssignmentCard'
 import FilterBar from '../components/FilterBar'
 
-export default function Dashboard({ user, onLogout }) {
+export default function Dashboard({ user, onLogout, onUpdateProfile }) {
   const [assignments, setAssignments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -64,7 +64,7 @@ export default function Dashboard({ user, onLogout }) {
 
   return (
     <div className="dashboard">
-      <Header user={user} onLogout={handleLogout} lastUpdate={lastUpdate} />
+      <Header user={user} onLogout={handleLogout} lastUpdate={lastUpdate} onUpdateProfile={onUpdateProfile} />
       
       <div className="dashboard-content">
         <FilterBar activeFilter={filter} onFilterChange={setFilter} />
