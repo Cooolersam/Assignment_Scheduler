@@ -5,22 +5,16 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "thoth",
-    "platforms": ["ios", "android"],
-    "icon": "./assets/icon.png",
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#EFF4EC"
-    },
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.thoth.app"
     },
     "android": {
-      "package": "com.thoth.app",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#EFF4EC"
-      }
+      "package": "com.thoth.app"
     }
   }
 }
