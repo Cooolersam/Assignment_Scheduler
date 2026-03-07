@@ -45,11 +45,11 @@ export default function AssignmentCard({ assignment }) {
             <span className="meta-value">{formatDueDate()}</span>
           </div>
 
-          {assignment.assignedGrade !== null && (
+          {assignment.points != null && (
             <div className="meta-item">
               <span className="meta-label">Grade</span>
               <span className="meta-value grade">
-                {assignment.assignedGrade} / {assignment.points || '—'}
+                {assignment.assignedGrade != null ? assignment.assignedGrade : '—'} / {assignment.points}
               </span>
             </div>
           )}
