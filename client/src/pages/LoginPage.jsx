@@ -9,6 +9,9 @@ export default function LoginPage() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
+          <div className="login-logo-wrap">
+            <img src="/Thoth.svg" alt="Thoth" className="login-logo-img" />
+          </div>
           <h1>Thoth</h1>
           <p>Sync your Google Classroom assignments</p>
         </div>

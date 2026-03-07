@@ -18,18 +18,19 @@
   gap: 10px;
 }
 
-.logo {
+.logo-wrap {
   width: 32px;
   height: 32px;
-  background-color: var(--accent);
+  overflow: hidden;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.logo-img {
+  /* Full image at this width = 83px wide, 160px tall. Container shows top 32px = top 20% */
+  width: 83px;
+  height: auto;
+  display: block;
 }
 
 .header-left h1 {
