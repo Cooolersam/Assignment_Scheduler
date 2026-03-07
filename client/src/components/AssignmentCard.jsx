@@ -1,7 +1,7 @@
 import { formatDistance, formatRelative } from 'date-fns'
 import './AssignmentCard.css'
 
-export default function AssignmentCard({ assignment }) {
+export default function AssignmentCard({ assignment, courseColor }) {
   const getStatusColor = (status) => {
     if (status === 'TURNED_IN') return 'status-submitted'
     if (assignment.dueDate && new Date(assignment.dueDate) < new Date()) return 'status-overdue'
@@ -17,24 +17,38 @@ export default function AssignmentCard({ assignment }) {
   const formatDueDate = () => {
     if (!assignment.dueDate) return 'No due date'
     const dueDate = new Date(assignment.dueDate)
-    return formatRelative(dueDate, new Date()).replace('at ', '')
+    const formatted = formatRelative(dueDate, new Date()).replace('at ', '')
+    return formatted.charAt(0).toUpperCase() + formatted.slice(1)
   }
 
+  const cardStyle = courseColor ? {
+    backgroundColor: courseColor.bg,
+    borderColor: courseColor.border,
+    borderLeft: `4px solid ${courseColor.accent}`,
+  } : {}
+
+  const pillStyle = courseColor ? {
+    backgroundColor: courseColor.pill,
+    color: courseColor.pillText,
+  } : {}
+
   return (
-    <div className="assignment-card">
+    <div className="assignment-card" style={cardStyle}>
       <div className="card-header">
-        <h3 className="assignment-title">{assignment.title}</h3>
+        <div className="header-main">
+          {assignment.courseName && (
+            <span className="course-pill" style={pillStyle}>
+              {assignment.courseName}
+            </span>
+          )}
+          <h3 className="assignment-title">{assignment.title}</h3>
+        </div>
         <span className={`status-badge ${getStatusColor(assignment.submissionStatus)}`}>
           {getStatusLabel()}
         </span>
       </div>
 
       <div className="card-body">
-        <div className="assignment-course">
-          <span className="course-icon">📚</span>
-          <span className="course-name">{assignment.courseName}</span>
-        </div>
-
         {assignment.description && (
           <p className="assignment-description">{assignment.description}</p>
         )}

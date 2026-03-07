@@ -5,6 +5,38 @@ import Header from '../components/Header'
 import AssignmentCard from '../components/AssignmentCard'
 import FilterBar from '../components/FilterBar'
 
+const stringToHue = (str) => {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return Math.abs(hash) % 360
+}
+
+const getCourseColor = (courseName) => {
+  if (!courseName) return null
+  const h = stringToHue(courseName)
+  return {
+    bg: `hsl(${h}, 40%, 96%)`,
+    border: `hsl(${h}, 35%, 84%)`,
+    accent: `hsl(${h}, 55%, 50%)`,
+    pill: `hsl(${h}, 50%, 88%)`,
+    pillText: `hsl(${h}, 55%, 28%)`,
+  }
+}
+
+const GROUP_ORDER = ['overdue', 'today', 'tomorrow', 'thisWeek', 'nextMonth', 'later', 'noDate', 'submitted']
+const GROUP_LABELS = {
+  overdue: 'Overdue',
+  today: 'Due Today',
+  tomorrow: 'Due Tomorrow',
+  thisWeek: 'Due This Week',
+  nextMonth: 'Due Next Month',
+  later: 'Later',
+  noDate: 'No Due Date',
+  submitted: 'Submitted',
+}
+
 export default function Dashboard({ user, onLogout, onUpdateProfile }) {
   const [assignments, setAssignments] = useState([])
   const [loading, setLoading] = useState(true)
@@ -82,36 +114,84 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
       .sort((a, b) => calculatePriority(b) - calculatePriority(a))
   }
 
+  const groupAssignments = (list) => {
+    const now = new Date()
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const tomorrowStart = new Date(todayStart); tomorrowStart.setDate(todayStart.getDate() + 1)
+    const dayAfterTomorrow = new Date(todayStart); dayAfterTomorrow.setDate(todayStart.getDate() + 2)
+    const weekEnd = new Date(todayStart); weekEnd.setDate(todayStart.getDate() + 7)
+    const monthEnd = new Date(todayStart); monthEnd.setDate(todayStart.getDate() + 30)
+
+    const groups = { overdue: [], today: [], tomorrow: [], thisWeek: [], nextMonth: [], later: [], noDate: [], submitted: [] }
+
+    for (const a of list) {
+      if (a.submissionStatus === 'TURNED_IN') { groups.submitted.push(a); continue }
+      if (!a.dueDate) { groups.noDate.push(a); continue }
+
+      const due = new Date(a.dueDate)
+      const dueDay = new Date(due.getFullYear(), due.getMonth(), due.getDate())
+
+      if (dueDay < todayStart) groups.overdue.push(a)
+      else if (dueDay.getTime() === todayStart.getTime()) groups.today.push(a)
+      else if (dueDay.getTime() === tomorrowStart.getTime()) groups.tomorrow.push(a)
+      else if (due < weekEnd) groups.thisWeek.push(a)
+      else if (due < monthEnd) groups.nextMonth.push(a)
+      else groups.later.push(a)
+    }
+
+    return groups
+  }
+
   const filteredAssignments = getFilteredAssignments()
+  const grouped = groupAssignments(filteredAssignments)
+  const totalCount = filteredAssignments.length
+
+  // Build course color map
+  const courseColors = {}
+  for (const a of assignments) {
+    if (a.courseName && !courseColors[a.courseName]) {
+      courseColors[a.courseName] = getCourseColor(a.courseName)
+    }
+  }
 
   return (
     <div className="dashboard">
       <Header user={user} onLogout={handleLogout} lastUpdate={lastUpdate} onUpdateProfile={onUpdateProfile} />
-      
+
       <div className="dashboard-content">
         <FilterBar activeFilter={filter} onFilterChange={setFilter} />
-        
+
         <div className="assignments-container">
           {error && <div className="error-message">{error}</div>}
-          
+
           {loading && assignments.length === 0 ? (
             <div className="loading-state">
               <div className="spinner"></div>
               <p>Loading your assignments...</p>
             </div>
-          ) : filteredAssignments.length === 0 ? (
+          ) : totalCount === 0 ? (
             <div className="empty-state">
               <p>No assignments found.</p>
             </div>
           ) : (
-            <div className="assignments-list">
-              {filteredAssignments.map(assignment => (
-                <AssignmentCard 
-                  key={assignment.id} 
-                  assignment={assignment}
-                />
-              ))}
-            </div>
+            GROUP_ORDER.map(key => {
+              const group = grouped[key]
+              if (!group || group.length === 0) return null
+              return (
+                <div key={key} className="assignment-group">
+                  <h2 className={`group-heading group-heading-${key}`}>{GROUP_LABELS[key]}</h2>
+                  <div className="assignments-list">
+                    {group.map(assignment => (
+                      <AssignmentCard
+                        key={assignment.id}
+                        assignment={assignment}
+                        courseColor={courseColors[assignment.courseName] || null}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )
+            })
           )}
         </div>
       </div>

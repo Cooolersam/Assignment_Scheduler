@@ -59,6 +59,40 @@
   font-size: 15px;
 }
 
+.assignment-group {
+  margin-bottom: 36px;
+}
+
+.group-heading {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.group-heading-overdue {
+  color: var(--danger);
+  border-bottom-color: var(--danger-bg);
+}
+
+.group-heading-today {
+  color: var(--warning);
+  border-bottom-color: var(--warning-bg);
+}
+
+.group-heading-tomorrow {
+  color: var(--accent);
+}
+
+.group-heading-submitted {
+  color: var(--success);
+  border-bottom-color: var(--success-bg);
+}
+
 .assignments-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
