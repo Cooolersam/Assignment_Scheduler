@@ -7,6 +7,16 @@ public class Scheduler {
     }
 
     public void addAssignment(Pair assignment) {
-        assignmentList.add(assignment);
+        if (assignmentList.size() == 0) {
+            assignmentList.add(assignment);
+        } else {
+            int index = 0;
+            for (int i=0; i<assignmentList.size(); i++) {
+                if (assignment.getPriority() < assignmentList.get(i).getPriority()) {
+                    index++;
+                }
+            }
+            assignmentList.add(index, assignment);
+        }
     }
 }
