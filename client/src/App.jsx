@@ -15,12 +15,20 @@ function App() {
   const checkAuth = async () => {
     try {
       const response = await axios.get('/auth/user')
-      setUser(response.data)
+      const googleUser = response.data
+      const saved = JSON.parse(localStorage.getItem('profileCustomization') || '{}')
+      setUser({ ...googleUser, ...saved })
     } catch (err) {
       setUser(null)
     } finally {
       setLoading(false)
     }
+  }
+
+  const updateProfile = (updates) => {
+    const saved = JSON.parse(localStorage.getItem('profileCustomization') || '{}')
+    localStorage.setItem('profileCustomization', JSON.stringify({ ...saved, ...updates }))
+    setUser(prev => ({ ...prev, ...updates }))
   }
 
   if (loading) {
@@ -29,7 +37,9 @@ function App() {
 
   return (
     <div className="app-container">
-      {user ? <Dashboard user={user} onLogout={() => setUser(null)} /> : <LoginPage />}
+      {user
+        ? <Dashboard user={user} onLogout={() => setUser(null)} onUpdateProfile={updateProfile} />
+        : <LoginPage />}
     </div>
   )
 }

@@ -5,13 +5,19 @@ const router = express.Router();
 
 // Google OAuth routes
 router.get('/google',
-  passport.authenticate('google', { scope: ['profile', 'email', 'https://www.googleapis.com/auth/classroom.readonly'] })
+  passport.authenticate('google', { scope: [
+    'profile',
+    'email',
+    'https://www.googleapis.com/auth/classroom.courses.readonly',
+    'https://www.googleapis.com/auth/classroom.coursework.me.readonly',
+    'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly'
+  ] })
 );
 
 router.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    res.redirect(process.env.FRONTEND_URL || 'http://localhost:3000');
+  (_req, res) => {
+    res.redirect('/');
   }
 );
 

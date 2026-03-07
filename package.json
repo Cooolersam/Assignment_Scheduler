@@ -1,13 +1,13 @@
 {
-  "name": "assignment-scheduler",
+  "name": "thoth",
   "version": "1.0.0",
-  "description": "Assignment Scheduler - Google Classroom Dashboard",
+  "description": "Thoth - Google Classroom Dashboard",
   "private": true,
   "scripts": {
     "install-all": "npm install && cd client && npm install && cd ../server && npm install",
     "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
-    "build": "cd client && npm run build && cd ../server && npm run build",
-    "start": "cd server && npm start"
+    "build": "cd client && npm install --include=dev && npm run build && cd ../server && npm install",
+    "start": "node server/server.js"
   },
   "keywords": ["google-classroom", "assignment", "scheduler"],
   "author": "",

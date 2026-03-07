@@ -26,26 +26,33 @@ export async function getClassroomData(accessToken) {
         
         const processedAssignments = assignments
           .filter(a => a.workType === 'ASSIGNMENT')
-          .map(assignment => ({
+          .map(assignment => {
+            let dueDate = null;
+            if (assignment.dueDate) {
+              const { year, month, day } = assignment.dueDate;
+              const hours = assignment.dueTime?.hours ?? 23;
+              const minutes = assignment.dueTime?.minutes ?? 59;
+              dueDate = new Date(Date.UTC(year, month - 1, day, hours, minutes)).toISOString();
+            }
+            return ({
             id: assignment.id,
             courseId: course.id,
             courseName: course.name,
             title: assignment.title,
             description: assignment.description,
-            dueDate: assignment.dueDate ? new Date(assignment.dueDate).toISOString() : null,
-            dueTime: assignment.dueTime && assignment.dueDate 
-              ? new Date(`${assignment.dueDate}T${assignment.dueTime.hours}:${assignment.dueTime.minutes}`).toISOString()
-              : null,
+            dueDate,
+            dueTime: dueDate,
             status: assignment.state,
             createdTime: assignment.creationTime,
             points: assignment.maxPoints || null
-          }));
+          });
+          });
 
         // Get student submissions for each assignment
         for (const assignment of processedAssignments) {
           try {
             const submissionsResponse = await axios.get(
-              `${CLASSROOM_API_BASE}/courses/${course.id}/courseWork/${assignment.id}/studentSubmissions`,
+              `${CLASSROOM_API_BASE}/courses/${course.id}/courseWork/${assignment.id}/studentSubmissions?userId=me`,
               { headers }
             );
 

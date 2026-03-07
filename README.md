@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Assignment_Scheduler
-=======
 # Assignment Scheduler
 
 A modern, dark-themed web application that integrates with Google Classroom to display your assignments and grades in one place.
@@ -158,4 +155,3 @@ GPLv3
 ## Support
 
 For issues and feature requests, please open an issue on GitHub.
->>>>>>> 41426961a15e61f182e6a00cc7fbccf543b2725e

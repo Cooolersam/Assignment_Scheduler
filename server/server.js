@@ -6,11 +6,18 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { getClassroomData } from './routes/classroom.js';
 import { authRoutes } from './routes/auth.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+app.set('trust proxy', 1);
 
 // Middleware
 app.use(cors({
@@ -72,8 +79,15 @@ app.get('/api/classroom/assignments', (req, res) => {
 });
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({ status: 'OK' });
+});
+
+// Serve React frontend
+const clientDist = path.join(__dirname, '../client/dist');
+app.use(express.static(clientDist));
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(clientDist, 'index.html'));
 });
 
 app.listen(PORT, () => {
