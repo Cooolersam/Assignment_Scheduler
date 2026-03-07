@@ -15,6 +15,7 @@
     devShells.${system}.default = pkgs.mkShell {
       buildInputs = with pkgs; [
           jdk25
+          eza
       ];
 
       shellHook = ''

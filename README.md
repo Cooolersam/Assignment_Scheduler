@@ -153,7 +153,7 @@ Make sure to update `FRONTEND_URL` and `GOOGLE_CALLBACK_URL` in production.
 
 ## License
 
-MIT
+GPLv3
 
 ## Support
 
