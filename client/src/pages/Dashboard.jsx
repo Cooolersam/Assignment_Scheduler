@@ -4,6 +4,7 @@ import './Dashboard.css'
 import Header from '../components/Header'
 import AssignmentCard from '../components/AssignmentCard'
 import FilterBar from '../components/FilterBar'
+import CourseGrades from '../components/CourseGrades'
 
 const stringToHue = (str) => {
   let hash = 0
@@ -160,18 +161,41 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
   const grouped = groupAssignments(filteredAssignments)
   const totalCount = filteredAssignments.length
 
-  // Build course list and color map
+  // Build course list, color map, and grade summaries
   const courseSet = new Set()
   const courseColors = {}
+  const courseGradeMap = {}
   for (const a of assignments) {
     if (a.courseName) {
       courseSet.add(a.courseName)
       if (!courseColors[a.courseName]) {
         courseColors[a.courseName] = getCourseColor(a.courseName)
       }
+      if (!courseGradeMap[a.courseName]) {
+        courseGradeMap[a.courseName] = { earned: 0, total: 0, graded: 0, pending: 0 }
+      }
+      if (a.assignedGrade != null && a.points) {
+        courseGradeMap[a.courseName].earned += a.assignedGrade
+        courseGradeMap[a.courseName].total += a.points
+        courseGradeMap[a.courseName].graded += 1
+      } else {
+        courseGradeMap[a.courseName].pending += 1
+      }
     }
   }
   const courses = [...courseSet].sort()
+  const courseGrades = courses.map(name => {
+    const d = courseGradeMap[name]
+    return {
+      name,
+      pct: d.total > 0 ? (d.earned / d.total) * 100 : null,
+      earned: d.earned,
+      total: d.total,
+      graded: d.graded,
+      pending: d.pending,
+      color: courseColors[name],
+    }
+  })
 
   return (
     <div className="dashboard">
@@ -187,6 +211,10 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
           onDueDateSortChange={setDueDateSort}
           courses={courses}
         />
+
+        {courseGrades.some(c => c.pct !== null) && (
+          <CourseGrades courseGrades={courseGrades} />
+        )}
 
         <div className="assignments-container">
           {error && <div className="error-message">{error}</div>}
