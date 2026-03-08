@@ -1,6 +1,6 @@
 # Thoth Assignment Scheduler
 
-A modern, dark-themed web application that integrates with Google Classroom to display your assignments and grades in one place.
+A modern, light-themed web application that integrates with Google Classroom to display your assignments and grades in one place.
 
 ## Features
 
