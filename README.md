@@ -1,4 +1,4 @@
-# Assignment Scheduler
+# Thoth Assignment Scheduler
 
 A modern, dark-themed web application that integrates with Google Classroom to display your assignments and grades in one place.
 
@@ -9,6 +9,10 @@ A modern, dark-themed web application that integrates with Google Classroom to d
 - 🎯 **Smart Filtering** - Filter by all, upcoming, pending, or submitted assignments
 - ⚡ **Fast & Responsive** - Smooth UI with no extra clicks needed
 - 📱 **Mobile Friendly** - Works great on phones and tablets
+
+# Website
+
+https://assignment-scheduler-gbnm.onrender.com/
 
 ## Tech Stack
 
