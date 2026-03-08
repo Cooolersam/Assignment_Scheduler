@@ -110,6 +110,93 @@
   color: var(--text-secondary);
 }
 
+.sources-wrap {
+  position: relative;
+}
+
+.sources-btn {
+  padding: 7px 14px;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sources-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.sources-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 260px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  padding: 14px 16px;
+  z-index: 50;
+}
+
+.sources-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.sources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.source-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.source-coming-soon {
+  color: var(--text-secondary);
+}
+
+.source-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.source-dot-active {
+  background-color: var(--success);
+}
+
+.source-dot-soon {
+  background-color: var(--border);
+}
+
+.source-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background-color: var(--border);
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
 .logout-btn {
   padding: 7px 14px;
   background-color: transparent;

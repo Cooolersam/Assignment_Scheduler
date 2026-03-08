@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './Header.css'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -92,6 +92,48 @@ function ProfileModal({ user, onUpdateProfile, onClose }) {
   )
 }
 
+function SourcesPopover() {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  return (
+    <div className="sources-wrap" ref={ref}>
+      <button className="sources-btn" onClick={() => setOpen(!open)}>
+        Sources
+      </button>
+      {open && (
+        <div className="sources-popover">
+          <p className="sources-title">Grades and assignments compiled from:</p>
+          <div className="sources-list">
+            <div className="source-item source-active">
+              <span className="source-dot source-dot-active" />
+              <span>Google Classroom</span>
+            </div>
+            <div className="source-item source-coming-soon">
+              <span className="source-dot source-dot-soon" />
+              <span>Infinite Campus</span>
+              <span className="source-badge">Coming Soon</span>
+            </div>
+            <div className="source-item source-coming-soon">
+              <span className="source-dot source-dot-soon" />
+              <span>Canvas</span>
+              <span className="source-badge">Coming Soon</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Header({ user, onLogout, lastUpdate, onUpdateProfile }) {
   const [showModal, setShowModal] = useState(false)
 
@@ -114,6 +156,7 @@ export default function Header({ user, onLogout, lastUpdate, onUpdateProfile }) 
         </div>
 
         <div className="header-right">
+          <SourcesPopover />
           <button className="user-info-btn" onClick={() => setShowModal(true)}>
             <Avatar user={user} size={32} />
             <div className="user-details">
