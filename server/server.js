@@ -32,10 +32,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
+  rolling: true, // reset expiry on every request (inactivity timeout)
   cookie: {
     secure: IS_PRODUCTION,
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 8 * 60 * 60 * 1000 // log out after 8 hours of inactivity
   }
 }));
 
