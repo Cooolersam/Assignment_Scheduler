@@ -1,6 +1,22 @@
 import { formatDistance, formatRelative } from 'date-fns'
 import './AssignmentCard.css'
 
+function gradeColor(pct) {
+  if (pct >= 90) return { color: '#2E7D52', bg: '#E8F5EE' }
+  if (pct >= 80) return { color: '#4A7C59', bg: '#EDF5E8' }
+  if (pct >= 70) return { color: '#92650A', bg: '#FDF6E3' }
+  if (pct >= 60) return { color: '#B06020', bg: '#FEF0E0' }
+  return { color: '#B83232', bg: '#FCEAEA' }
+}
+
+function letterGrade(pct) {
+  if (pct >= 90) return 'A'
+  if (pct >= 80) return 'B'
+  if (pct >= 70) return 'C'
+  if (pct >= 60) return 'D'
+  return 'F'
+}
+
 export default function AssignmentCard({ assignment, courseColor }) {
   const getStatusColor = (status) => {
     if (status === 'TURNED_IN') return 'status-submitted'
@@ -32,6 +48,10 @@ export default function AssignmentCard({ assignment, courseColor }) {
     color: courseColor.pillText,
   } : {}
 
+  const hasGrade = assignment.assignedGrade != null && assignment.points
+  const pct = hasGrade ? (assignment.assignedGrade / assignment.points) * 100 : null
+  const gc = hasGrade ? gradeColor(pct) : null
+
   return (
     <div className="assignment-card" style={cardStyle}>
       <div className="card-header">
@@ -60,11 +80,23 @@ export default function AssignmentCard({ assignment, courseColor }) {
           </div>
 
           {assignment.points != null && (
-            <div className="meta-item">
+            <div className="meta-item" style={hasGrade ? { borderColor: gc.color + '30' } : {}}>
               <span className="meta-label">Grade</span>
-              <span className="meta-value grade">
-                {assignment.assignedGrade != null ? assignment.assignedGrade : '—'} / {assignment.points}
-              </span>
+              {hasGrade ? (
+                <span className="grade-display">
+                  <span className="grade-letter" style={{ backgroundColor: gc.bg, color: gc.color }}>
+                    {letterGrade(pct)}
+                  </span>
+                  <span className="grade-score" style={{ color: gc.color }}>
+                    {assignment.assignedGrade}/{assignment.points}
+                  </span>
+                  <span className="grade-pct" style={{ color: gc.color }}>
+                    {pct.toFixed(0)}%
+                  </span>
+                </span>
+              ) : (
+                <span className="meta-value grade-ungraded">— / {assignment.points}</span>
+              )}
             </div>
           )}
         </div>
