@@ -136,6 +136,36 @@
   font-weight: 600;
 }
 
+.grade-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.grade-letter {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+
+.grade-score {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.grade-pct {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.grade-ungraded {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
 .card-footer {
   padding: 12px 20px;
   background-color: var(--success-bg);

@@ -1,12 +1,19 @@
 .filter-bar {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
-.filter-btn {
-  padding: 7px 16px;
+.dropdown {
+  position: relative;
+}
+
+.dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
   background-color: var(--surface);
   color: var(--text-secondary);
   border: 1px solid var(--border);
@@ -17,16 +24,73 @@
   cursor: pointer;
   transition: all 0.15s ease;
   box-shadow: var(--shadow-sm);
+  white-space: nowrap;
 }
 
-.filter-btn:hover {
+.dropdown-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-.filter-btn.active {
+.dropdown-btn-active {
   background-color: var(--accent);
   color: white;
   border-color: var(--accent);
-  box-shadow: 0 2px 8px rgba(99, 91, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(74, 124, 89, 0.3);
+}
+
+.dropdown-btn-active:hover {
+  background-color: var(--accent-hover);
+  color: white;
+}
+
+.dropdown-label {
+  font-weight: 600;
+}
+
+.dropdown-value {
+  font-weight: 500;
+}
+
+.dropdown-arrow {
+  font-size: 9px;
+  margin-left: 2px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 180px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.dropdown-option {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.1s ease;
+}
+
+.dropdown-option:hover {
+  background-color: var(--bg);
+}
+
+.dropdown-option-active {
+  color: var(--accent);
+  font-weight: 600;
+  background-color: rgba(74, 124, 89, 0.08);
 }

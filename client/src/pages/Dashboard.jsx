@@ -41,12 +41,13 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
   const [assignments, setAssignments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [filter, setFilter] = useState('all') // all, pending, submitted, upcoming
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [courseFilter, setCourseFilter] = useState('all')
+  const [dueDateSort, setDueDateSort] = useState('priority')
   const [lastUpdate, setLastUpdate] = useState(null)
 
   useEffect(() => {
     fetchAssignments()
-    // Auto-refresh every 5 minutes
     const interval = setInterval(fetchAssignments, 5 * 60 * 1000)
     return () => clearInterval(interval)
   }, [])
@@ -75,24 +76,30 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
     }
   }
 
-  // Ported from Pair.java — priority determines sort order (higher = more urgent)
-  // Formula: (100 - classGrade) * 10000 + (-daysUntilDue) * 100 + pointValue
   const calculatePriority = (assignment) => {
     const today = new Date()
-
-    // Days until due — negative means overdue (higher urgency)
     const daysUntilDue = assignment.dueDate
       ? Math.floor((new Date(assignment.dueDate) - today) / (1000 * 60 * 60 * 24))
       : 999
-
-    // Class grade as percentage — lower grade = higher priority
     const classGrade = assignment.assignedGrade && assignment.points
       ? (assignment.assignedGrade / assignment.points) * 100
       : 100
-
     const pointValue = assignment.points || 0
-
     return (100 - classGrade) * 10000 + (-daysUntilDue) * 100 + pointValue
+  }
+
+  const sortFn = (a, b) => {
+    if (dueDateSort === 'due-asc') {
+      const aTime = a.dueDate ? new Date(a.dueDate).getTime() : Infinity
+      const bTime = b.dueDate ? new Date(b.dueDate).getTime() : Infinity
+      return aTime - bTime
+    }
+    if (dueDateSort === 'due-desc') {
+      const aTime = a.dueDate ? new Date(a.dueDate).getTime() : -Infinity
+      const bTime = b.dueDate ? new Date(b.dueDate).getTime() : -Infinity
+      return bTime - aTime
+    }
+    return calculatePriority(b) - calculatePriority(a)
   }
 
   const getFilteredAssignments = () => {
@@ -100,18 +107,24 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
 
     return assignments
       .filter(assignment => {
-        switch (filter) {
+        // Status filter
+        switch (statusFilter) {
           case 'pending':
-            return assignment.submissionStatus !== 'TURNED_IN'
+            if (assignment.submissionStatus === 'TURNED_IN') return false
+            break
           case 'submitted':
-            return assignment.submissionStatus === 'TURNED_IN'
+            if (assignment.submissionStatus !== 'TURNED_IN') return false
+            break
           case 'upcoming':
-            return assignment.submissionStatus !== 'TURNED_IN' && assignment.dueDate && new Date(assignment.dueDate) > now
-          default:
-            return true
+            if (assignment.submissionStatus === 'TURNED_IN') return false
+            if (!assignment.dueDate || new Date(assignment.dueDate) <= now) return false
+            break
         }
+        // Course filter
+        if (courseFilter !== 'all' && assignment.courseName !== courseFilter) return false
+        return true
       })
-      .sort((a, b) => calculatePriority(b) - calculatePriority(a))
+      .sort(sortFn)
   }
 
   const groupAssignments = (list) => {
@@ -142,24 +155,38 @@ export default function Dashboard({ user, onLogout, onUpdateProfile }) {
     return groups
   }
 
+  // Group by course instead of due date when course sort isn't "all" but we always group by due date
   const filteredAssignments = getFilteredAssignments()
   const grouped = groupAssignments(filteredAssignments)
   const totalCount = filteredAssignments.length
 
-  // Build course color map
+  // Build course list and color map
+  const courseSet = new Set()
   const courseColors = {}
   for (const a of assignments) {
-    if (a.courseName && !courseColors[a.courseName]) {
-      courseColors[a.courseName] = getCourseColor(a.courseName)
+    if (a.courseName) {
+      courseSet.add(a.courseName)
+      if (!courseColors[a.courseName]) {
+        courseColors[a.courseName] = getCourseColor(a.courseName)
+      }
     }
   }
+  const courses = [...courseSet].sort()
 
   return (
     <div className="dashboard">
       <Header user={user} onLogout={handleLogout} lastUpdate={lastUpdate} onUpdateProfile={onUpdateProfile} />
 
       <div className="dashboard-content">
-        <FilterBar activeFilter={filter} onFilterChange={setFilter} />
+        <FilterBar
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          courseFilter={courseFilter}
+          onCourseChange={setCourseFilter}
+          dueDateSort={dueDateSort}
+          onDueDateSortChange={setDueDateSort}
+          courses={courses}
+        />
 
         <div className="assignments-container">
           {error && <div className="error-message">{error}</div>}
