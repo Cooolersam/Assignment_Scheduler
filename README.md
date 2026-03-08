@@ -150,7 +150,7 @@ Make sure to update `FRONTEND_URL` and `GOOGLE_CALLBACK_URL` in production.
 
 ## License
 
-GPLv3
+GPLv3.0
 
 ## Support
 
